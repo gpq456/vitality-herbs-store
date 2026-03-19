@@ -67,8 +67,8 @@
             <a href="#" class="logo"><span style="font-size: 2rem;">🌿</span> Vitality Herbs</a>
             <ul class="nav-links">
                 <li><a href="#products">Products</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#features">About</a></li>
+                <li><a href="#footer">Contact</a></li>
                 <li class="cart-icon" onclick="toggleCart()">🛒<span class="cart-count" id="cart-count">0</span></li>
             </ul>
         </nav>
@@ -101,7 +101,7 @@
         <a href="#products" class="cta-button">Shop Now</a>
     </section>
     
-    <section class="features">
+    <section class="features" id="features">
         <div class="features-grid">
             <div class="feature-card"><div class="feature-icon">🌱</div><h3>100% Natural</h3><p>Pure herbal ingredients from China</p></div>
             <div class="feature-card"><div class="feature-icon">🔬</div><h3>Lab Tested</h3><p>Third-party tested for safety</p></div>
@@ -118,7 +118,7 @@
                 <div class="product-info">
                     <h3>Premium Goji Berries</h3>
                     <p>Organic dried goji berries from Ningxia</p>
-                    <div class="product-price">\$24.99<span class="original">\$34.99</span></div>
+                    <div class="product-price">$24.99<span class="original">$34.99</span></div>
                     <button class="buy-button" onclick="addToCart('goji')">Add to Cart</button>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                 <div class="product-info">
                     <h3>Red Dates (Jujube)</h3>
                     <p>Sweet and nutritious dried red dates</p>
-                    <div class="product-price">\$19.99<span class="original">\$29.99</span></div>
+                    <div class="product-price">$19.99<span class="original">$29.99</span></div>
                     <button class="buy-button" onclick="addToCart('dates')">Add to Cart</button>
                 </div>
             </div>
@@ -136,14 +136,14 @@
                 <div class="product-info">
                     <h3>Ginseng Root Extract</h3>
                     <p>Premium Panax Ginseng capsules</p>
-                    <div class="product-price">\$39.99<span class="original">\$59.99</span></div>
+                    <div class="product-price">$39.99<span class="original">$59.99</span></div>
                     <button class="buy-button" onclick="addToCart('ginseng')">Add to Cart</button>
                 </div>
             </div>
         </div>
     </section>
     
-    <footer>
+    <footer id="footer">
         <p>© 2024 Vitality Herbs. All rights reserved.</p>
     </footer>
     
@@ -197,28 +197,28 @@
                 totalPrice += item.price * item.quantity;
             });
             document.getElementById('cart-count').textContent = totalItems;
-            document.getElementById('cart-total').textContent = '\$' + totalPrice.toFixed(2);
+            document.getElementById('cart-total').textContent = '$' + totalPrice.toFixed(2);
             const cartItems = document.getElementById('cart-items');
             const checkoutBtn = document.getElementById('checkout-btn');
             if (totalItems === 0) {
                 cartItems.innerHTML = '<div class="cart-empty"><p style="font-size: 3rem; margin-bottom: 1rem;">🛒</p><p>Your cart is empty</p></div>';
                 checkoutBtn.disabled = true;
             } else {
-                cartItems.innerHTML = Object.values(cart).map(item => \`
+                cartItems.innerHTML = Object.values(cart).map(item => `
                     <div class="cart-item">
-                        <div class="cart-item-image">\${item.icon}</div>
+                        <div class="cart-item-image">${item.icon}</div>
                         <div class="cart-item-info">
-                            <div class="cart-item-name">\${item.name}</div>
-                            <div>\$\${item.price.toFixed(2)}</div>
+                            <div class="cart-item-name">${item.name}</div>
+                            <div>$${item.price.toFixed(2)}</div>
                             <div class="quantity-controls">
-                                <button class="quantity-btn" onclick="updateQuantity('\${item.id}', -1)">−</button>
-                                <span class="quantity-display">\${item.quantity}</span>
-                                <button class="quantity-btn" onclick="updateQuantity('\${item.id}', 1)">+</button>
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">−</button>
+                                <span class="quantity-display">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
                             </div>
-                            <button class="remove-item" onclick="removeFromCart('\${item.id}')">Remove</button>
+                            <button class="remove-item" onclick="removeFromCart('${item.id}')">Remove</button>
                         </div>
                     </div>
-                \`).join('');
+                `).join('');
                 checkoutBtn.disabled = false;
             }
         }

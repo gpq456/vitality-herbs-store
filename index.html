@@ -133,6 +133,7 @@
                 <li><a href="#footer" onclick="closeMobileMenu()">Contact</a></li>
                 <li class="cart-icon" onclick="toggleCart()">🛒<span class="cart-count" id="cart-count">0</span></li>
                 <li id="userNav"></li>
+                <li id="ordersNav" style="display:none;"><a href="#" onclick="openOrders()">Orders</a></li>
             </ul>
         </nav>
     </header>
@@ -269,6 +270,19 @@
         </div>
     </section>
     
+    <!-- Orders History Modal -->
+    <div class="modal" id="ordersModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 My Orders</h3>
+                <button class="modal-close" onclick="closeOrders()">×</button>
+            </div>
+            <div class="modal-body" id="ordersList">
+                <p style="text-align: center; color: #999;">No orders yet</p>
+            </div>
+        </div>
+    </div>
+
     <footer id="footer">
         <p>© 2024 Vitality Herbs. All rights reserved.</p>
         <p style="margin-top: 0.5rem; font-size: 0.8rem;">Contact: info@vitalityherbs.com</p>
@@ -499,6 +513,51 @@
         
         function closeMobileMenu() {
             document.getElementById('navLinks').classList.remove('mobile-open');
+        }
+        
+        // Orders Functions
+        function openOrders() {
+            closeMobileMenu();
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const container = document.getElementById('ordersList');
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">No orders yet</p>';
+            } else {
+                container.innerHTML = orders.reverse().map(order => `
+                    <div style="border: 1px solid #eee; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <strong>${order.id}</strong>
+                            <span style="color: #1a5f4a; font-weight: bold;">${order.total}</span>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666;">
+                            <p>📅 ${new Date(order.date).toLocaleDateString()}</p>
+                            <p>👤 ${order.customer.name}</p>
+                            <p>📦 ${Object.keys(order.items).length} item(s)</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('ordersModal').classList.add('show');
+        }
+        
+        function closeOrders() {
+            document.getElementById('ordersModal').classList.remove('show');
+        }
+        
+        function updateOrdersNav() {
+            const nav = document.getElementById('ordersNav');
+            if (currentUser) {
+                nav.style.display = 'block';
+            } else {
+                nav.style.display = 'none';
+            }
+        }
+        
+        // Override updateUserUI to also show orders nav
+        const originalUpdateUserUI = updateUserUI;
+        updateUserUI = function() {
+            originalUpdateUserUI();
+            updateOrdersNav();
         }
     </script>
 </body>

@@ -238,7 +238,7 @@
                     </div>
                     <button type="submit" class="btn" id="loginBtn">Login</button>
                     <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
-                        <a href="#" onclick="toggleRegister()" style="color: #1a5f4a;">Don't have an account? Register</a>
+                        <a href="#" onclick="toggleRegister()" id="registerLink" style="color: #1a5f4a;">Don't have an account? Register</a>
                     </p>
                 </form>
             </div>
@@ -448,12 +448,15 @@
         function toggleRegister() {
             const title = document.getElementById('loginTitle');
             const btn = document.getElementById('loginBtn');
+            const link = document.getElementById('registerLink');
             if (title.textContent === '👤 Login') {
                 title.textContent = '📝 Register';
                 btn.textContent = 'Register';
+                link.textContent = 'Already have an account? Login';
             } else {
                 title.textContent = '👤 Login';
                 btn.textContent = 'Login';
+                link.textContent = "Don't have an account? Register";
             }
         }
         

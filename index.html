@@ -15,6 +15,7 @@
         .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; margin: 0; padding: 0; }
         .nav-links a { color: white; text-decoration: none; font-weight: 500; font-size: 0.95rem; }
         .nav-links a:hover { opacity: 0.8; }
+        .nav-links input { padding: 0.3rem 0.6rem; border: none; border-radius: 4px; width: 120px; font-size: 0.85rem; }
         
         /* Cart Icon */
         .cart-icon { position: relative; cursor: pointer; font-size: 1.4rem; padding: 0.3rem; display: flex; align-items: center; }
@@ -127,7 +128,8 @@
         <nav>
             <a href="#" class="logo"><span>🌿</span> Vitality Herbs</a>
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-            <ul class="nav-links" id="navLinks">
+            <ul class="nav-links">
+                <li><input type="text" id="searchInput" placeholder="Search..." onkeyup="searchProducts(this.value)" style="padding: 0.3rem 0.6rem; border: none; border-radius: 4px; width: 120px; font-size: 0.85rem;"> id="navLinks">
                 <li><a href="#products" onclick="closeMobileMenu()">Products</a></li>
                 <li><a href="#features" onclick="closeMobileMenu()">About</a></li>
                 <li><a href="#footer" onclick="closeMobileMenu()">Contact</a></li>
@@ -309,6 +311,33 @@
             updateCartUI();
             updateUserUI();
         });
+        
+        // Search Products
+        function searchProducts(query) {
+            query = query.toLowerCase();
+            const grid = document.getElementById('productsGrid');
+            const filtered = Object.values(products).filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.description.toLowerCase().includes(query)
+            );
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: #999;">No products found</p>';
+            } else {
+                grid.innerHTML = filtered.map(product => `
+                    <div class="product-card">
+                        <div class="product-image" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                            <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='${product.icon}'">
+                        </div>
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <div class="product-price">$${product.price.toFixed(2)}<span class="original">$${product.originalPrice.toFixed(2)}</span></div>
+                            <button class="buy-button" onclick="addToCart('${product.id}')">Add to Cart</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
         
         // Render Products
         function renderProducts() {

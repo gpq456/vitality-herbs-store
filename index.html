@@ -53,6 +53,9 @@
         .hero { background: linear-gradient(rgba(26, 95, 74, 0.92), rgba(26, 95, 74, 0.92)), url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1200') center/cover; color: white; padding: 7rem 1.5rem 4rem; text-align: center; margin-top: 50px; }
         .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
         .hero p { font-size: 1.1rem; max-width: 550px; margin: 0 auto 1.5rem; opacity: 0.9; }
+        .category-btn { padding: 0.5rem 1rem; border: 2px solid #1a5f4a; background: white; color: #1a5f4a; border-radius: 20px; cursor: pointer; font-weight: 500; margin: 0 0.25rem; transition: all 0.3s; }
+        .category-btn.active, .category-btn:hover { background: #1a5f4a; color: white; }
+        
         .cta-button { display: inline-block; background: #f4a261; color: white; padding: 0.8rem 2rem; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1rem; }
         
         /* Features */
@@ -266,7 +269,13 @@
     </section>
     
     <section class="products" id="products">
-        <h2 class="section-title">Featured Products</h2>
+        <h2 class="section-title">Our Products</h2>
+        <div style="text-align: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 0.5rem;" id="categoryFilters">
+            <button onclick="filterProducts('all')" class="category-btn active">All</button>
+            <button onclick="filterProducts('berries')" class="category-btn">Berries</button>
+            <button onclick="filterProducts('extracts')" class="category-btn">Extracts</button>
+            <button onclick="filterProducts('honey')" class="category-btn">Honey</button>
+        </div>
         <div class="products-grid" id="productsGrid">
             <!-- Products will be rendered by JavaScript -->
         </div>
@@ -293,12 +302,12 @@
     <script>
         // Product Data
         const products = {
-            'goji': { id: 'goji', name: 'Premium Goji Berries', description: 'Organic dried goji berries from Ningxia', price: 24.99, originalPrice: 34.99, icon: '🍵', image: 'https://images.unsplash.com/photo-1590502593747-42a996133562?w=400' },
-            'dates': { id: 'dates', name: 'Red Dates (Jujube)', description: 'Sweet and nutritious dried red dates', price: 19.99, originalPrice: 29.99, icon: '🫘', image: 'https://images.unsplash.com/photo-1590005354167-6da97870c757?w=400' },
-            'ginseng': { id: 'ginseng', name: 'Ginseng Root Extract', description: 'Premium Panax Ginseng capsules', price: 39.99, originalPrice: 59.99, icon: '🌿', image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400' },
-            'tea': { id: 'tea', name: 'Green Tea Extract', description: 'Antioxidant-rich green tea', price: 18.99, originalPrice: 24.99, icon: '🍵', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400' },
-            'mushroom': { id: 'mushroom', name: 'Reishi Mushroom', description: 'Traditional immunity booster', price: 34.99, originalPrice: 44.99, icon: '🍄', image: 'https://images.unsplash.com/photo-1574068305096-7c0b05b3898c?w=400' },
-            'honey': { id: 'honey', name: 'Manuka Honey', description: 'Premium New Zealand honey', price: 49.99, originalPrice: 69.99, icon: '🍯', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400' }
+            'goji': { id: 'goji', category: 'berries', name: 'Premium Goji Berries', description: 'Organic dried goji berries from Ningxia', price: 24.99, originalPrice: 34.99, icon: '🍵', image: 'https://images.unsplash.com/photo-1590502593747-42a996133562?w=400' },
+            'dates': { id: 'dates', category: 'berries', name: 'Red Dates (Jujube)', description: 'Sweet and nutritious dried red dates', price: 19.99, originalPrice: 29.99, icon: '🫘', image: 'https://images.unsplash.com/photo-1590005354167-6da97870c757?w=400' },
+            'ginseng': { id: 'ginseng', category: 'extracts', name: 'Ginseng Root Extract', description: 'Premium Panax Ginseng capsules', price: 39.99, originalPrice: 59.99, icon: '🌿', image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400' },
+            'tea': { id: 'tea', category: 'extracts', name: 'Green Tea Extract', description: 'Antioxidant-rich green tea', price: 18.99, originalPrice: 24.99, icon: '🍵', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400' },
+            'mushroom': { id: 'mushroom', category: 'extracts', name: 'Reishi Mushroom', description: 'Traditional immunity booster', price: 34.99, originalPrice: 44.99, icon: '🍄', image: 'https://images.unsplash.com/photo-1574068305096-7c0b05b3898c?w=400' },
+            'honey': { id: 'honey', category: 'honey', name: 'Manuka Honey', description: 'Premium New Zealand honey', price: 49.99, originalPrice: 69.99, icon: '🍯', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400' }
         };
         
         // State
@@ -311,6 +320,34 @@
             updateCartUI();
             updateUserUI();
         });
+        
+        // Filter Products
+        function filterProducts(category) {
+            // Update active button
+            document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
+            event.target.classList.add("active");
+            
+            const grid = document.getElementById("productsGrid");
+            let filtered;
+            if (category === "all") {
+                filtered = Object.values(products);
+            } else {
+                filtered = Object.values(products).filter(p => p.category === category);
+            }
+            grid.innerHTML = filtered.map(product => `
+                <div class="product-card">
+                    <div class="product-image" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                        <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.parentElement.innerHTML='${product.icon}'">
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div class="product-price">$${product.price.toFixed(2)}<span class="original">$${product.originalPrice.toFixed(2)}</span></div>
+                        <button class="buy-button" onclick="addToCart('${product.id}')">Add to Cart</button>
+                    </div>
+                </div>
+            `).join(""");
+        }
         
         // Search Products
         function searchProducts(query) {
